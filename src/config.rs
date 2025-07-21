@@ -169,7 +169,7 @@ impl Config {
             .long("native")
             .help("Collect stack traces from native extensions written in Cython, C or C++");
 
-        #[cfg(unwind)]
+        #[cfg(feature = "unwind")]
         let native_all = Arg::new("native-all")
             .short('N')
             .long("native-all")
@@ -340,11 +340,11 @@ impl Config {
         let top = top.arg(native.clone());
         let dump = dump.arg(native.clone());
 
-        #[cfg(unwind)]
+        #[cfg(feature = "unwind")]
         let record = record.arg(native_all.clone());
-        #[cfg(unwind)]
+        #[cfg(feature = "unwind")]
         let top = top.arg(native_all.clone());
-        #[cfg(unwind)]
+        #[cfg(feature = "unwind")]
         let dump = dump.arg(native_all.clone());
 
         // Nonblocking isn't an option for freebsd, remove
@@ -449,7 +449,7 @@ impl Config {
             .value_of("pid")
             .map(|p| p.parse().expect("invalid pid"));
         config.full_filenames = matches.occurrences_of("full_filenames") > 0;
-        if cfg!(unwind) {
+        if cfg!(feature = "unwind") {
             config.native_all = matches.occurrences_of("native-all") > 0;
             config.native = config.native_all || matches.occurrences_of("native") > 0;
         }
